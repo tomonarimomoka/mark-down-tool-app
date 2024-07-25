@@ -24,3 +24,85 @@ router.get('/check',function(req,res,next){
         res.json({result:req.session.login.name});
     }
 });
+
+router.get('/all',(req,res,next) => {
+    if(check(req,res)){
+        res.json({});
+        return;
+    }
+    prisma.Markdata.findMany({
+        where:{accountId: +req.session.login.id},
+        orderBy:[{createdAt:'desc'}],
+    }).then(mds=>{
+        res.json(mds);
+    });
+})
+
+router.get('/mark/:id',(req,res,next) => {
+    if(check(req,res)){
+        res.json([]);
+        return;
+    }
+    prisma.Markdata.findMany({
+        where:{
+            id:+req.params.id,
+            accountId:+req.session.login.id
+        },
+        orderBy:[
+            {createdAt:'desc'}
+        ],
+    })
+    .then((models) => {
+        const model = modesl != null ? 
+                        models[0] != nulll ? 
+                            models[0]:null:null;
+        res.json(model);
+    });
+});
+
+router.post('/add',(req,res,next) => {
+    if(check(req,res)){
+        res.json({});
+        return;
+    }
+    prisma.Markdata.create({
+        data:{
+            accountId:req.session.login.id,
+            title: req.body.title,
+            content:req.body.content,
+        }
+    })
+    .then(model => {
+        res.json(model);
+    });
+});
+
+router.post('mark/edit',(req,res,next) => {
+    if(check(req,res)){
+        res.json([]);
+        return;
+    }
+    prisma.Markdata.update({
+        where:{ id: +req.body.id},
+        data:{
+            title: req.body.title,
+            content: req.body.content
+        }
+    })
+    .then(model => {
+        res.json(model);
+    });
+});
+
+router.post('/mark/render',(req,res,next) => {
+    if(check(req,res)){
+        res.json({});
+        return;
+    }
+    const source = req.body.source;
+    const ren = markdown.render(source);
+    const result = {render:ren};
+    res.json(result);
+})
+
+module.exports = router;
