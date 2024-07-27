@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Login</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.css" rel="stylesheet" crossorigin="anonymous">
+        <style>
+            .table-wrapper {
+                width: 100%;
+                height: 200px;
+                overflow: auto;
+                padding:5px;
+                border: 2px solid #a3a3a3
+            }
+        </style>
+        <script>
+            var accountId = '';
+            var mkdata = [];
+            var title = '';
+            var source = '';
+            var editId = 0;
+            var mode = '新規作成'
+
+            function refresh(){
+                docment.querySelector("#accountId").textContent = accountId;
+                docment.querySelector("#title").value = title;
+                document.querySelector("#source").value = source;
+                document.querySelector("#content").innerHTML = content;
+                docment.querySelector("modebtn").value = mode;
+            }
+            function refreshData(){
+                let con = "";
+                mkdata.map((ob) => {
+                    con += "<tr><td>";
+                    con += '<a classNam="text-dark" href="#" onClik="getById(event)" name="' + ob.id + '">';
+                    con += ob.title + "</a>";
+                    con += "</td></tr>";    
+                });
+                document.querySelector('#datacontainer').innerHTML = con ;
+            }
+
+            function getAccount(){
+                fetch('/api/check')
+                .then(resp => resp.json())
+                .then(res => {
+                    if(res.result != false){
+                        accountId = res.result;
+                        getAllData();
+                        refresh();
+                    }else{
+                        window.location.href="/login.html";
+                    }
+                });
+            }
+
+            function getAllData(){
+                fetch('/api/all').then(resp => resp.json()).then(res => {
+                    mkdata = res;
+                    refreshData();
+                })
+            }
+
+            function getById(e){
+                fetch('/api/mark' + e.target.name).then(resp => resp.json())
+                .then(res => {
+                    title = res.title;
+                    source = res.content;
+                    editId = res.id;
+                    getRender(res.content);
+                    mode="更新"
+                })
+            }
+
+            function getRender(src){
+                const source = {source: src};
+                fetch('/api/mark/render',{
+                    method:'post',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify(source),
+                }).then(data => data.json()).then(res => {
+                    content = res.render;
+                    refresh();
+                })
+            }
+
+            function sendData(){
+                title = document.querySelector("#title").value;
+                source = docment.querySelector("#sourve").value;
+
+                if(mode == '新規作成'){
+                    create();
+                }else{
+                    update();
+                }
+            }
+
+            function create(){
+                const data = {
+                    title:title,
+                    content:source,
+                    accountId:accountId
+                }
+                fetch('/api/add',{
+                    method:'post',
+                    headers:{
+                        'Content-Type':'aoolication/json'
+                    },
+                    body:JSON.stringify(data),
+                }).then(data => {
+                    getAllData();
+                });
+            }
+
+            function update(){
+                const data = {
+                    title:title,
+                    content:source,
+                    id:editId
+                }
+                fetch('/apo/mark/edit',{
+                    method:'post',
+                    headers:{
+                        'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify(data),
+                }).then(data => {
+                    getAllData();
+                });
+            }
+        </script>
+     </head>
+     <body class="container" onload="getAccount()">
+        <div class="App">
+            <header>
+                <h1 class="display-4 text-primary">Markdown data</h1>  
+            </header>
+            <div role="main">
+                <p class="h5 my-4">Hi,
+                    <span id="accountId"></span>!
+                </p>
+
+                <div class="table-wrapper">
+                    <table class="table">
+                        <thead>
+                            <tr><th>Title</th></tr>
+                        </thead>
+                        <tvody id="datacontainer"></tvody>
+                    </table>
+                </div>
+               <hr/>
+
+               <div>
+                    <div class="form-group">
+                        <label>TITLE</label>
+                        <input type="text" name="title" id="title" class="form-control" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label>SOURCE</label>
+                        <textarea name="source" id="source" rouws="8" class="form-control" value=""></textarea>
+                    </div>
+                    <center><input id="modebtn" type="button" value="作成" onclick="sendData()" class="btn btn-primary m-2" /> </center>
+               </div>
+
+               <div class="card mt-4">
+                    <div class="card-header text-center h5">
+                        Preview
+                    </div>
+                    <div class="card-body">
+                        <div id="content"></div>
+                    </div>
+               </div>
+
+            </div>
+        </div>
+     </body>
+</html>

@@ -1,4 +1,11 @@
 {
+  "name": "mark-down-tool-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  
   "dependencies": {
     "@prisma/client":"^4.13.0",
     "cookie-parser":"~1.4.6",

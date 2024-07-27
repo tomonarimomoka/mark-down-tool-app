@@ -32,8 +32,6 @@ router.get("/",(req,res,next) => {
     });
 });
 router.get("/find",(req,res,next) => {
-    // const min = +req.query.min;
-    // const max = +req.query.max;
     const name = req.query.name;
     const mail = req.query.mail;
 
