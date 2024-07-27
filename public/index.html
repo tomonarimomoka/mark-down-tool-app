@@ -32,7 +32,7 @@
                 let con = "";
                 mkdata.map((ob) => {
                     con += "<tr><td>";
-                    con += '<a classNam="text-dark" href="#" onClik="getById(event)" name="' + ob.id + '">';
+                    con += '<a className="text-dark" href="#" onClik="getById(event)" name="' + ob.id + '">';
                     con += ob.title + "</a>";
                     con += "</td></tr>";    
                 });
@@ -105,7 +105,7 @@
                 fetch('/api/add',{
                     method:'post',
                     headers:{
-                        'Content-Type':'aoolication/json'
+                        'Content-Type':'application/json'
                     },
                     body:JSON.stringify(data),
                 }).then(data => {
@@ -119,7 +119,7 @@
                     content:source,
                     id:editId
                 }
-                fetch('/apo/mark/edit',{
+                fetch('/api/mark/edit',{
                     method:'post',
                     headers:{
                         'Content-Type':'application/json'
