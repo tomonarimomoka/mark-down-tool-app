@@ -22,11 +22,11 @@
             var mode = '新規作成'
 
             function refresh(){
-                docment.querySelector("#accountId").textContent = accountId;
-                docment.querySelector("#title").value = title;
+                document.querySelector("#accountId").textContent = accountId;
+                document.querySelector("#title").value = title;
                 document.querySelector("#source").value = source;
                 document.querySelector("#content").innerHTML = content;
-                docment.querySelector("modebtn").value = mode;
+                document.querySelector("#modebtn").value = mode;
             }
             function refreshData(){
                 let con = "";
@@ -86,8 +86,8 @@
             }
 
             function sendData(){
-                title = document.querySelector("#title").value;
-                source = docment.querySelector("#sourve").value;
+                title  = document.querySelector("#title").value;
+                source = document.querySelector("#source").value;
 
                 if(mode == '新規作成'){
                     create();
