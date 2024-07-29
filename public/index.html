@@ -32,7 +32,7 @@
                 let con = "";
                 mkdata.map((ob) => {
                     con += "<tr><td>";
-                    con += '<a className="text-dark" href="#" onClik="getById(event)" name="' + ob.id + '">';
+                    con += '<a className="text-dark" href="#" onClick="getById(event)" name="' + ob.id + '">';
                     con += ob.title + "</a>";
                     con += "</td></tr>";    
                 });
@@ -61,14 +61,15 @@
             }
 
             function getById(e){
-                fetch('/api/mark' + e.target.name).then(resp => resp.json())
-                .then(res => {
-                    title = res.title;
-                    source = res.content;
-                    editId = res.id;
-                    getRender(res.content);
-                    mode="更新"
-                })
+                fetch('/api/mark/' + e.target.name)
+                    .then(resp => resp.json())
+                    .then(res => {
+                        title = res.title;
+                        source = res.content;
+                        editId = res.id;
+                        getRender(res.content);
+                    mode="更新";
+                });
             }
 
             function getRender(src){
@@ -146,7 +147,7 @@
                         <thead>
                             <tr><th>Title</th></tr>
                         </thead>
-                        <tvody id="datacontainer"></tvody>
+                        <tbody id="datacontainer"></tbody>
                     </table>
                 </div>
                <hr/>
@@ -154,13 +155,17 @@
                <div>
                     <div class="form-group">
                         <label>TITLE</label>
-                        <input type="text" name="title" id="title" class="form-control" value="" />
+                        <input type="text" name="title" id="title" 
+                            class="form-control" value="" />
                     </div>
                     <div class="form-group">
                         <label>SOURCE</label>
-                        <textarea name="source" id="source" rouws="8" class="form-control" value=""></textarea>
+                        <textarea name="source" id="source" rouws="8" 
+                            class="form-control" value=""></textarea>
                     </div>
-                    <center><input id="modebtn" type="button" value="作成" onclick="sendData()" class="btn btn-primary m-2" /> </center>
+                    <center><input id="modebtn" type="button" value="作成"
+                                onclick="sendData()" 
+                                class="btn btn-primary m-2" /></center>
                </div>
 
                <div class="card mt-4">

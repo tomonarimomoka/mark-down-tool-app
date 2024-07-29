@@ -53,8 +53,8 @@ router.get('/mark/:id',(req,res,next) => {
         ],
     })
     .then((models) => {
-        const model = modesl != null ? 
-                        models[0] != nulll ? 
+        const model = models != null ? 
+                        models[0] != null ? 
                             models[0]:null:null;
         res.json(model);
     });
@@ -77,7 +77,7 @@ router.post('/add',(req,res,next) => {
     });
 });
 
-router.post('mark/edit',(req,res,next) => {
+router.post('/mark/edit',(req,res,next) => {
     if(check(req,res)){
         res.json([]);
         return;
